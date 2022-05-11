@@ -1,14 +1,10 @@
 import streamlit as st
 import pandas as pd
  
-st.title('Housing Price Prediction')
+st.title("Neda's Movie Recommender")
 st.write(
     """
-    ## project
-    ### we have several recommenders:
-     1. Popularity based recommender
-     2. Item based recommender
-     3. User based recommender
+    ### Popularity-based movie recommender
     """
 )
 
@@ -41,22 +37,12 @@ recom_ids = popularity_based_recommender(dense_matrix.copy(), 20, num_recom)
 recom_names = pd.merge(recom_ids, movies, on='movieId').filter(['title'])
 st.dataframe(recom_names)
 
-
-### py function get users prefered movie
-# def get_user_prefered_item(dense_matrix: pd.DataFrame, user: str):
-
-#     data = dense_matrix.copy()
-#     data.columns = ['user', 'item', 'rating']
-
-#     return(
-#     data
-#         .query('user == @user')
-#         .sort_values('rating', ascending=False)
-#         ['item'].to_list()[0]
-#     )
-
-# get_user_prefered_item(dense_matrix, 'Hana')
-
+st.write(
+    """
+    ### Item-based movie recommender
+    ##### The search results for your favorite movie:
+    """
+) 
 ### py function get sparse matrix
 def get_sparse_matrix(dense_matrix: pd.DataFrame): 
 
@@ -89,9 +75,14 @@ def recommend_movie_title(movies: pd.DataFrame, ratings:pd.DataFrame, movie_id: 
     return(result)
 
 
-movie_title = st.sidebar.text_input(label = "What is your favorite movie?")
+movie_title = st.sidebar.text_input(label = "To use the item-based movie recommender, you need to enter the name (or even part of the name) of your favorite movie here:")
 movies[movies['title'].str.contains(movie_title.title(), na=False)]
-movie_id = st.sidebar.number_input("Please enter the movie ID", min_value=1, max_value=movies.shape[0])
+
+movie_id = st.sidebar.number_input("If you found the right name of your favorite movie, please enter its ID here:", min_value=1, max_value=movies.shape[0])
 list= recommend_movie_title(movies, ratings, movie_id, min_num_rating=5)
+st.write(
+    """
+    ### Our recommendation for you :)
+    """
+) 
 st.dataframe(list)
-# [movies.query('movieId == @id')['title'] for id in Ids]
